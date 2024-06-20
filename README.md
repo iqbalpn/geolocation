@@ -4,7 +4,7 @@
 
 
 
-pre-requisite :
+step :
 1. install docker
 
 2. to run the apps, build and run the docker-compose
