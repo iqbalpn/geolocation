@@ -1,0 +1,6 @@
+{
+    "locations": [
+        { "name": "Test Location 1", "lat": -6.2, "lon": 106.816666 },
+        { "name": "Test Location 2", "lat": -8.4, "lon": 115.18 }
+    ]
+}

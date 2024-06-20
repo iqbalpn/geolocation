@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Map Visualization</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <style>
+        #map {
+            height: 600px;
+        }
+    </style>
+</head>
+<body>
+<h1>Map Visualization</h1>
+<form id="uploadForm" enctype="multipart/form-data">
+    <input type="file" id="fileInput" name="file" accept=".json"/>
+    <button type="submit">Upload</button>
+</form>
+<div id="map"></div>
+
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+<script>
+    document.getElementById('uploadForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+
+        let formData = new FormData();
+        formData.append('file', document.getElementById('fileInput').files[0]);
+
+        fetch('/data/upload', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.text())
+        .then(data => {
+            console.log(data);
+            loadMapData();
+        })
+        .catch(error => {
+            console.error('File upload failed:', error);
+        });
+    });
+
+    function loadMapData() {
+        fetch('/data/processed')
+            .then(response => response.json())
+            .then(data => {
+                let map = L.map('map').setView([-6.2, 106], 5);
+
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    attribution: '© OpenStreetMap contributors'
+                }).addTo(map);
+
+                // Assuming the JSON has an array of locations with lat and lon
+                let locations = data.locations;
+                locations.forEach(location => {
+                    L.marker([location.lat, location.lon]).addTo(map)
+                        .bindPopup(location.name);
+                });
+            })
+            .catch(error => {
+                console.error('Failed to load map data:', error);
+            });
+    }
+
+    // Load map data on initial page load
+    loadMapData();
+</script>
+</body>
+</html>
