@@ -17,4 +17,4 @@ docker-compose up --build
 
 4. upload the sample json files, located at test/resources/test-data.json
 
-
+5. swagger can be accessed at http://localhost:8080/q/swagger-ui
